@@ -1,16 +1,10 @@
 #!/bin/bash
 
-ticket1Number=${1?Numero de ticket #1}
-ticket2Number=${2?Numero de ticket #2}
-ticket3Number=${3?Numero de ticket #3}
-ticket4Number=${4?Numero de ticket #4}
-ticket5Number=${5?Numero de ticket #5}
+firstTicketNumber=${1?Numero du premier ticket}
 
-xs="4.1 9.2 18.3"
-initial_y=23.5
-diff_y=5.5
-ticketNumbers="$ticket1Number $ticket2Number $ticket3Number $ticket4Number $ticket5Number"
-
+xs="3.8 9.2 18.3"
+initial_y=23.8
+diff_y=5.4
 
 cat > /tmp/tombola.ps <<EOF
 %!PS
@@ -20,9 +14,12 @@ gsave initgraphics 0 setgray
 draft-Bigfont setfont
 EOF
 
-current_y=$initial_y
-for ticketNumber in $ticketNumbers
+for p in $(seq 0 9)
 do
+current_y=$initial_y
+for b in $(seq 0 4)
+do
+  ticketNumber=$(printf %05d $(($firstTicketNumber + $p + 10 * $b )))
   for x in $xs
   do
   cat >> /tmp/tombola.ps <<EOF
@@ -34,9 +31,8 @@ EOF
   done
   current_y=$(bc <<< "scale=1; $current_y - $diff_y ")
 done
-cat >> /tmp/tombola.ps <<EOF
-showpage
-EOF
+echo showpage >> /tmp/tombola.ps
+done
 
 ps2pdf /tmp/tombola.ps -
 
