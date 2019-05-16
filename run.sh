@@ -1,9 +1,11 @@
 #!/bin/bash
 
+[ $# -ne 2 ] && echo "usage: $0: modele_carnet nombre_ticket" && exit 1
+
 modele_carnet=${1?Modèle de Carnet}
 nombre_ticket=${2?Nombre de ticket}
 
-stamp_file=$(mktemp --suffix=ticket_stamp)
+stamp_file=stamp_file_to_remove
 
 numero=1
 tickets_par_modele=50
@@ -17,3 +19,4 @@ do
   numero=$(( $numero + $tickets_par_modele))
 done
 
+echo "If needed, you can concat file with pdfunite"
